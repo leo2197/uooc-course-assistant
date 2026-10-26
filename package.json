@@ -1,0 +1,19 @@
+{
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.56.1"
+  },
+  "scripts": {
+    "test": "node tests/verify-model-input.js && node tests/verify-review-disagreement.js && node tests/verify-video-recovery.js && node tests/verify-scanf.js && node tests/verify-c-output.js && node tests/verify-submission-once.js && node tests/verify-c-rules.js && node tests/verify-human-review.js && node tests/verify-visible-locator.js && node tests/verify-review-cli.js && node tests/verify-monitor.js && node tests/verify-grade-watch.js && node tests/verify-course-selection.js && node tests/verify-public-setup.cjs && node tests/verify-launcher.cjs",
+    "test:browser": "node tests/verify-video-only.js && node tests/verify-supervised.js && node tests/verify-choice-actions.js && node tests/verify-navigation-guard.js && node tests/verify-web-session.cjs",
+    "start": "node assistant.cjs",
+    "check": "node console.cjs --check"
+  },
+  "name": "uooc-course-assistant",
+  "version": "0.1.0-alpha.1",
+  "private": true,
+  "description": "Windows UOOC课程学习辅助工具",
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,18 @@
+const assert = require('node:assert/strict');
+const { printfTypeIssue, verifyDigitSplit, verifyKeywordError } = require('../utils/c-rules');
+assert.deepEqual(verifyKeywordError('int case;float printF;该程序编译时产生错误，其出错原因是',['A.printF不能用作标识符','C.case是关键字，不能用作用户自定义标识符']).answers,['C']);
+assert.equal(verifyKeywordError('int printF;编译出错原因',['A.printF是关键字，不能用作标识符']),null);
+assert.ok(printfTypeIssue('输出结果 double d=3.2;int x=1.2,y;y=(x+3.8)/5.0;printf("%d\\n",d*y);'));
+assert.ok(printfTypeIssue('输出结果 float value=1.5;printf("%d",value);'));
+assert.equal(printfTypeIssue('输出结果 double d=3.2;printf("%f",d);'), null);
+assert.equal(printfTypeIssue('输出结果 double d=3.2;printf("%d",(int)d);'), null);
+assert.equal(printfTypeIssue('输出结果 double d=3.2;printf("%d",d>0);'), null);
+assert.equal(printfTypeIssue('输出结果 int x=3;printf("%d",x);'), null);
+assert.equal(printfTypeIssue('选择正确输出语句 double d=1.0;\nA.printf("%d",d);\nB.printf("%f",d);'), null);
+const text = '假设三位正整数x，以下是正确分解x的各位的语句。';
+assert.deepEqual(verifyDigitSplit(text, ['D.a=x/100,b=x/10%10,c=x%10;', 'A.a=x/100;b=x/10/10;c=x%10;']).answers, ['D']);
+assert.equal(verifyDigitSplit(text, ['A.a=x/100;b=x/10%10;c=x%10;', 'B.a=x%10;b=x/10%10;c=x/100;']), null);
+assert.equal(verifyDigitSplit(text, ['A.a=x/100;b=x%100/10;c=x-b*100-a*10;']), null);
+assert.equal(verifyDigitSplit(text, ['A.a=x/100;system("hello");c=x%10;']), null);
+assert.equal(verifyDigitSplit('假设三位正整数x，按百位、十位、个位分解。', ['A.a=x%10;b=x/10%10;c=x/100;']), null);
+console.log('PASS printf floating/int mismatch is flagged; casts/comparisons excluded; digit split exhausts domain and rejects ambiguity');
