@@ -10,7 +10,7 @@
     "check": "node console.cjs --check"
   },
   "name": "uooc-course-assistant",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "private": true,
   "description": "Windows UOOC课程学习辅助工具",
   "engines": {

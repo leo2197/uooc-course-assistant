@@ -5,8 +5,16 @@ $privateDirectory=Join-Path $PSScriptRoot 'config'
 [void][IO.Directory]::CreateDirectory($privateDirectory)
 Write-Host '先配置模型，再打开网页本人登录。推荐GLM，也支持其他兼容服务。' -ForegroundColor Cyan
 Write-Host 'API调用费用以自己的服务商为准。Key管理网页不是API接口地址。'
-$url=Read-Host 'API地址（回车使用GLM官方接口）'
-if(-not $url){$url='https://open.bigmodel.cn/api/paas/v4'}
+Write-Host '1 GLM（推荐）：预填官方API地址，填写自己的Key即可。'
+Write-Host '2 其他兼容服务：填写服务商提供的Chat Completions API地址和Key。'
+do{$service=(Read-Host '选择服务 [1]：').Trim();if(-not $service){$service='1'}}while($service -notin @('1','2'))
+if($service -eq '1'){
+ $url='https://open.bigmodel.cn/api/paas/v4'
+ Write-Host '已选择GLM官方接口。请在智谱开放平台创建自己的API Key，不是网页登录密码。'
+}else{
+ do{$url=(Read-Host 'API地址（例如 https://你的服务商地址/v1）').Trim()}while(-not $url)
+ Write-Host '支持兼容OpenAI Chat Completions协议的服务；请确认该地址不是Key管理网页。'
+}
 Write-Host '粘贴Key时不显示字符；粘贴后按回车。'
 $secret=Read-Host 'API Key' -AsSecureString
 $pointer=[Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
@@ -14,7 +22,7 @@ try{$apiKey=[Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer)}finally
 if($apiKey -eq [string][char]22){$apiKey=Get-Clipboard -Raw}
 $apiKey=$apiKey.Trim()
 if(-not $apiKey -or $apiKey -match '[^\x21-\x7e]'){throw 'Key为空或包含空格、中文、控制字符。请重新复制完整API Key。'}
-$model=Read-Host '模型ID（回车自动识别；熟悉其他服务时可自行指定）'
+$model=Read-Host '模型ID（回车尝试自动检测；服务商没有模型列表时请手动填写）'
 $judge='';if($model){$judge=Read-Host '裁决模型ID（回车使用同一个模型）'}
 $pending=Join-Path $privateDirectory 'provider-pending.dpapi'
 try{
